@@ -1,0 +1,36 @@
+{
+  "title": "World Cup",
+  "name": "Legendary",
+  "image": "https://goal-crypto.com/nft/teams/1/img.gif",
+  "fileUrl": "https://goal-crypto.com/nft/teams/1/img.gif",
+  "description": "Goal Crypto Game Asset",
+  "externalLink": "https://goal-crypto.com/",
+  "attributes": [
+    {
+      "trait_type": "Creator",
+      "value": "Goal Crypto"
+    }
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Legendary: World Cup"
+    },
+    "description": {
+      "type": "string",
+      "description": "Goal Crypto Game Asset"
+    },
+    "image":{
+      "type": "string",
+      "description": "https://goal-crypto.com/nft/teams/1/img.gif"
+    },
+    "created_at": {
+      "type": "datetime",
+      "description": "2022-10-28T00:00:00.000Z"
+    },
+    "digital_media_file_type": {
+      "type": "string",
+      "description": "collectible"
+    }
+  }
+}
