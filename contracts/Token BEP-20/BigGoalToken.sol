@@ -1,7 +1,7 @@
 pragma solidity >=0.8.0;
 // SPDX-License-Identifier: MIT
 
-interface IERC20 {
+interface IBEP20 {
 
     function totalSupply() external view returns (uint256);
     function balanceOf(address account) external view returns (uint256);
@@ -14,7 +14,7 @@ interface IERC20 {
     event Approval(address indexed owner, address indexed spender, uint256 value);
 }
 
-interface IERC20Metadata is IERC20 {
+interface IBEP20Metadata is IBEP20 {
     function name() external view returns (string memory);
     function symbol() external view returns (string memory);
     function decimals() external view returns (uint256);
@@ -31,7 +31,7 @@ abstract contract Context {
     }
 }
 
-contract ERC20 is Context, IERC20, IERC20Metadata {
+contract BEP20 is Context, IBEP20, IBEP20Metadata {
     mapping (address => uint256) private _balances;
 
     mapping (address => mapping (address => uint256)) private _allowances;
@@ -130,7 +130,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
 
 }
 
-contract CoinToken is ERC20 {
+contract Token is BEP20 {
     constructor(
         string memory name_,
         string memory symbol_,
@@ -138,7 +138,7 @@ contract CoinToken is ERC20 {
         uint256 initialBalance_,
         address tokenOwner_,
         address payable feeReceiver_
-    ) payable ERC20(name_, symbol_,initialBalance_,decimals_,tokenOwner_) {
+    ) payable BEP20(name_, symbol_,initialBalance_,decimals_,tokenOwner_) {
         payable(feeReceiver_).transfer(msg.value);
     }
 }
