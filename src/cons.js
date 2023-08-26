@@ -29,7 +29,7 @@ var API2 = "";
 
 var WALLETPAY = "0x00326ad2E5ADb9b95035737fD4c56aE452C2c965";
 
-const TESTNET = false; 
+const TESTNET = true; 
 
 if(TESTNET){
     tokenCSC = "0xd5881b890b443be0c609BDFAdE3D8cE886cF9BAc"//token no correcto

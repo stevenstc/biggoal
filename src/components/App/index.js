@@ -250,9 +250,11 @@ class App extends Component {
             return(<MarketV2 wallet={this.state.binanceM} currentAccount={this.state.currentAccount} consulta={this.state.walletconsulta}/>);
           case "inventario":
             return(<Home wallet={this.state.binanceM} currentAccount={this.state.currentAccount}/>);
-          default:
+          case "home":
             return(<Fan wallet={this.state.binanceM} currentAccount={this.state.currentAccount}/>);
-
+          default:
+            return(<PreSale wallet={this.state.binanceM} currentAccount={this.state.currentAccount}/>);
+      
         }
       }else{
         return(<div style={{'paddingTop': '7em','textAlign':'center'}}><h1>HAS BANNED</h1></div>)

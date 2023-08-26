@@ -140,38 +140,39 @@ export default class Market extends Component {
   render() {
     return (
       <>
-      <img className="img-fluid" src="assets/img/banner-nft.png" alt="" ></img>
+      <img className="img-fluid" src="assets/img/banner-nft.png" alt="" width="100%"></img>
 
       <header className="masthead text-center ">
       <div className="masthead-content">
         <div className="container px-5">
         <div className="row">
             <div className="col-lg-12 col-md-12 p-4 text-center  text-white">
-              <h2 className=" pb-4">GCP available: {this.state.balance}</h2>
+              <h2 className=" pb-4">BGOL in presale: {this.state.balance}</h2>
             </div>
 
           </div>
           <div className="row mt-1" style={{backgroundColor: "#461829", borderRadius: "30px"}}>
             <div className="col-12 p-4 text-center">
-              <h2 className=" pb-4">Buy Pack</h2>
+              <h2 className=" pb-4">Swap</h2>
             </div>
 
-            <div className="col-6 p-4 text-center" onClick={()=>{this.buypack(1)}} style={{cursor: "pointer"}} >
+            <div className="col-lg-6 col-md-12 p-4 text-center" onClick={()=>{this.buypack(1)}} style={{cursor: "pointer"}} >
               <img className="img-fluid" src="assets/img/pack1.png" alt="" ></img>
-              <h2 className=" pb-4"><button className="btn btn-warning btn-lg"><b>Buy for 715 GCP</b></button></h2>
+              <input type="number" ></input>
+              <h2 className=" pb-4"><button className="btn btn-warning btn-lg"><b>Buy for 715 BUSD</b></button></h2>
             </div>
 
-            <div className="col-6 p-4 text-center" onClick={()=>{this.buypack(2)}} style={{cursor: "pointer"}} >
+            <div className="col-lg-6 col-md-12 text-center" onClick={()=>{this.buypack(2)}} style={{cursor: "pointer"}} >
               <img className="img-fluid" src="assets/img/pack2.png" alt="" ></img>
-
-              <h2 className=" pb-4"><button className="btn btn-warning btn-lg"><b>Buy for 430 GCP</b></button></h2>
+              <input type="number" ></input>
+              <h2 className=" pb-4"><button className="btn btn-warning btn-lg"><b>Sell for 430 BUSD</b></button></h2>
               
             </div>
 
           </div>
           <div className="row">
             <div className="col-12 p-4 text-center">
-              <h2 className=" pb-4">My NFT's Buyed</h2>
+              <h2 className=" pb-4">My BGOL:</h2>
             </div>
 
             {this.state.inventario}

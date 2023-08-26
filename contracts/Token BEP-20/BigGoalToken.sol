@@ -136,9 +136,10 @@ contract Token is BEP20 {
         string memory symbol_,
         uint256 decimals_,
         uint256 initialBalance_,
-        address tokenOwner_,
-        address payable feeReceiver_
-    ) payable BEP20(name_, symbol_,initialBalance_,decimals_,tokenOwner_) {
-        payable(feeReceiver_).transfer(msg.value);
+        address tokenOwner_
+    ) BEP20(name_, symbol_,initialBalance_,decimals_,tokenOwner_) {
+
     }
 }
+
+//🏆 Big Goal ⚽
