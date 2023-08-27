@@ -1,7 +1,5 @@
-var TOKEN = "0xb775Aa16C216E34392e91e85676E58c3Ad72Ee77"; //token principal
-var tokenCSC = "0xb775Aa16C216E34392e91e85676E58c3Ad72Ee77"; //token principal
+var token = "0xb775Aa16C216E34392e91e85676E58c3Ad72Ee77"; //token principal
 var tokenUSDT = "0x55d398326f99059fF775485246999027B3197955"; //USDT
-var tokenNFT = "0xA42Ab8e44674651d388348Fd561350d3Ee8b0fe9"; //token NFT
 
 var SC = "0x2846df5d668C1B4017562b7d2C1E471373912509";// Market
 
@@ -32,10 +30,10 @@ var WALLETPAY = "0x00326ad2E5ADb9b95035737fD4c56aE452C2c965";
 const TESTNET = true; 
 
 if(TESTNET){
-    tokenCSC = "0xd5881b890b443be0c609BDFAdE3D8cE886cF9BAc"//token no correcto
+    token = "0x4ebdEC0EeeE228fBfC120E31612AC5FdAC51220B"//token no correcto
     tokenUSDT = "0xd5881b890b443be0c609BDFAdE3D8cE886cF9BAc";// usdt de pruebas
-    TOKEN = "0xd5881b890b443be0c609BDFAdE3D8cE886cF9BAc"; //token de pruebas
-    tokenNFT = "0x9878278b71E160AA1bb0dEED20c71a00DF4e3f01"; // token NFT de pruebas
+    preSale = "0x34987c17b4f5d68eE48B89E2604867Ec607fbF44"; // testnet presale NFT
+
     SC = "0xCB553b2128fAb586E8C6601983cdb134eaBdd989";//"0xfF7009EF7eF85447F6A5b3f835C81ADd60a321C9";// contrato test market
     SC2 = "0x0C4dDC36273ADBb967C78D3Ee0e7ea79200f1a30";// contrado test votacion fan
     SC3 = "0x87C24A718ef840274356D76f5c065562F72F6C54";// contrado test Staking-pool
@@ -44,7 +42,6 @@ if(TESTNET){
     MC1 = "0x2a41eFc800DC61158AB83E86949D1bCE08f8287C";// contrado test votacion match 1
     MC2 = "0x2BB0AF22edB16a8eBfec8657023B24A26fBDD4e1";// contrado test votacion match 2
     MC3 = "0x2BB0AF22edB16a8eBfec8657023B24A26fBDD4e1";// contrado test votacion match 3
-    preSale = "0xD0f16Fe96cbC4Fde487df871262d5C3D880b7184"; // testnet presale NFT
 
     API = "https://proxy-wozx.herokuapp.com/";
 
@@ -54,4 +51,4 @@ if(TESTNET){
 
 const FACTOR_GAS = 3;
 
-export default {WALLETPAY, FACTOR_GAS, SC, SC2, SC3, SC4, SC5, SC6, MC1, MC2, MC3, preSale, TOKEN, tokenNFT, tokenCSC, SCK, SCKDTT, API, API2, chainId, tokenUSDT};
+export default {WALLETPAY, FACTOR_GAS, SC, SC2, SC3, SC4, SC5, SC6, MC1, MC2, MC3, preSale, token, SCK, SCKDTT, API, API2, chainId, tokenUSDT};

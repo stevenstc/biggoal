@@ -12,8 +12,6 @@ import TronLinkGuide from "../TronLinkGuide";
 import cons from "../../cons"
 
 import abiToken from "../../abi/token";
-import abiTokenNFT from "../../abi/token-nft";
-import abiDiamonCSC from "../../abi/diamonCSC"
 import abiMarket from "../../abi/market";
 import abiInventario from "../../abi/inventario";
 import abiFan from "../../abi/fan"
@@ -21,16 +19,13 @@ import abiStaking from "../../abi/staking"
 import abiFaucet from "../../abi/faucet"
 import abiExchange from "../../abi/exchange"
 import abiMatch from "../../abi/match"
-import abiPreSale from "../../abi/presale"
+import abiPreventa from "../../abi/preventa"
 
 
 import detectEthereumProvider from '@metamask/detect-provider';
 
 const delay = (s) => new Promise((res) => setTimeout(res, s*1000));
 
-var addressToken = cons.TOKEN;
-var addressToken2 = cons.tokenCSC;
-var addressToken3 = cons.tokenUSDT;
 var addressMarket = cons.SC;
 var addressFan = cons.SC2;
 var addressStaking = cons.SC3;
@@ -109,21 +104,14 @@ class App extends Component {
         const provider = await detectEthereumProvider();
   
         var web3 = new Web3(provider); 
-        var contractTokenNFT = new web3.eth.Contract(
-          abiTokenNFT,
-          cons.tokenNFT
-        );
+        
         var contractToken = new web3.eth.Contract(
           abiToken,
-          addressToken
+          cons.token
         );
-        var contractToken2 = new web3.eth.Contract(
-          abiDiamonCSC,
-          addressToken2
-        );
-        var contractToken3 = new web3.eth.Contract(
+        var contractUSDT = new web3.eth.Contract(
           abiToken,
-          addressToken3
+          cons.tokenUSDT
         );
         
         var contractMarket = new web3.eth.Contract(
@@ -156,18 +144,8 @@ class App extends Component {
           cons.MC1
         );
 
-        var contractMatch2 = new web3.eth.Contract(
-          abiMatch,
-          cons.MC2
-        );
-
-        var contractMatch3 = new web3.eth.Contract(
-          abiMatch,
-          cons.MC3
-        );
-
         var contractPreSale = new web3.eth.Contract(
-          abiPreSale,
+          abiPreventa,
           cons.preSale
         );
 
@@ -186,10 +164,8 @@ class App extends Component {
           walletconsulta: walletconsulta,
           binanceM:{
             web3: web3,
-            contractTokenNFT: contractTokenNFT,
             contractToken: contractToken,
-            contractToken2: contractToken2,
-            contractToken3: contractToken3,
+            contractUSDT: contractUSDT,
             contractMarket: contractMarket,
             contractFan: contractFan,
             contractStaking: contractStaking,
@@ -197,8 +173,6 @@ class App extends Component {
             contractInventario: contractInventario,
             contractExchange: contractExchange,
             contractMatch1: contractMatch1,
-            contractMatch2: contractMatch2,
-            contractMatch3: contractMatch3,
             contractPreSale: contractPreSale,
           }
         })

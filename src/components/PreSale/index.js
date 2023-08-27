@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import cons from "../../cons"
 
 const BigNumber = require('bignumber.js');
 
-export default class Market extends Component {
+export default class Swap extends Component {
   constructor(props) {
     super(props);
 
@@ -15,11 +14,12 @@ export default class Market extends Component {
           <h2 className=" pb-2">Loading... please wait</h2>
         </div>
     )],
-      balance: "Loading..."
+      balance: "Loading...",
+      balanceTOKEN: 0,
+      balanceUSD: 0
     }
 
     this.balance = this.balance.bind(this);
-    this.inventario = this.inventario.bind(this);
     this.buypack = this.buypack.bind(this);
     this.update = this.update.bind(this);
 
@@ -36,106 +36,74 @@ export default class Market extends Component {
   async update() {
 
     this.balance();
-    this.inventario();
 
   }
 
   async balance() {
-    var balance =
-      await this.props.wallet.contractToken.methods
-        .balanceOf(this.props.currentAccount)
+    var balance = await this.props.wallet.contractPreSale.methods
+        .TOTAL_PREVENTA()
         .call({ from: this.props.currentAccount });
 
     balance = new BigNumber(balance).shiftedBy(-18).decimalPlaces(6).toString(10);
 
+    var balanceTOKEN = await this.props.wallet.contractToken.methods
+        .balanceOf(this.props.currentAccount)
+        .call({ from: this.props.currentAccount });
+
+        balanceTOKEN = new BigNumber(balanceTOKEN).shiftedBy(-18).decimalPlaces(6).toString(10);
+
+    var balanceUSD = await this.props.wallet.contractUSDT.methods
+        .balanceOf(this.props.currentAccount)
+        .call({ from: this.props.currentAccount });
+
+    balanceUSD = new BigNumber(balanceUSD).shiftedBy(-18).decimalPlaces(6).toString(10);
+
     this.setState({
-      balance: balance
+      balance: balance,
+      balanceUSD: balanceUSD,
+      balanceTOKEN: balanceTOKEN
     });
   }
 
 
-  async buypack(tipo) {
+  async buypack() {
 
-    var aprovado = await this.props.wallet.contractToken.methods
+    var aprovado = await this.props.wallet.contractUSDT.methods
     .allowance(this.props.currentAccount, this.props.wallet.contractPreSale._address)
     .call({ from: this.props.currentAccount });
+
+    console.log(this.props.currentAccount, this.props.wallet.contractPreSale._address)
 
     aprovado = new BigNumber(aprovado).shiftedBy(-18).decimalPlaces(2).toNumber(10);
 
     console.log(aprovado)
     if(aprovado <= 0){
       alert("insuficient aproved balance")
-      await this.props.wallet.contractToken.methods
+      await this.props.wallet.contractUSDT.methods
       .approve(this.props.wallet.contractPreSale._address, "115792089237316195423570985008687907853269984665640564039457584007913129639935")
       .send({ from: this.props.currentAccount });
     }
+
+    var amount = prompt("how much do you want to buy in BUSD",1)
+
+    var padre = "0x0000000000000000000000000000000000000000"
+    if(window.confirm("have refferal?")){
+      padre = prompt("entrer wallet of referal", "0x0000000000000000000000000000000000000000")
+    }
     
     
-    if(tipo === 1){
-      await this.props.wallet.contractPreSale.methods.buyPack1().send({ from: this.props.currentAccount });
+    if(amount >= 1){
+      amount = new BigNumber(amount).shiftedBy(18).decimalPlaces(0).toString(10);
+      await this.props.wallet.contractPreSale.methods.comprar(amount,padre).send({ from: this.props.currentAccount });
 
     }else{
-      await this.props.wallet.contractPreSale.methods.buyPack2().send({ from: this.props.currentAccount });
-
+      alert("error: amount")
     }
     this.update();
-    alert("Pack Buyed!")
+    alert("BGOL Buyed!")
     
   }
 
-
-  async inventario() {
-
-    var result = await this.props.wallet.contractTokenNFT.methods
-      .balanceOf(this.props.currentAccount)
-      .call({ from: this.props.currentAccount });
-
-    var inventario = []
-
-    for (let index = 0; index < result; index++) {
-
-      let id_item = await this.props.wallet.contractTokenNFT.methods
-      .tokenOfOwnerByIndex(this.props.currentAccount , index).call({ from: this.props.currentAccount });
-
-      let uri_item = await this.props.wallet.contractTokenNFT.methods
-      .tokenURI(id_item).call({ from: this.props.currentAccount });
-
-      let consulta = await  fetch(uri_item).catch(()=>{return false;});
-
-      if(!consulta.ok){
-        consulta = await  fetch(cons.API+uri_item).catch(()=>{return false;});
-        console.log("usando proxy");
-      }
-
-      if(consulta.ok){
-        consulta = await consulta.json();
-      
-        inventario[index] = (
-
-          <div className="col-3 p-1" key={`itemsTeam-${index}`}>
-            <h2># {id_item}</h2>
-            <h3>{consulta.title+" "+consulta.name}</h3>
-
-            <img className="pb-4" src={consulta.image} width="100%" alt={"nft team "+consulta.title+" "+consulta.name} />
-          </div>
-
-        )
-      }else{
-        inventario[index] = (
-
-          <div className="col-3 p-1" key={`itemsTeam-${index}`}>
-            <h2># {id_item}</h2>
-          </div>
-
-        )
-
-      }
-    }
-
-    this.setState({
-      inventario: inventario
-    })
-  }
 
   render() {
     return (
@@ -147,7 +115,7 @@ export default class Market extends Component {
         <div className="container px-5">
         <div className="row">
             <div className="col-lg-12 col-md-12 p-4 text-center  text-white">
-              <h2 className=" pb-4">BGOL in presale: {this.state.balance}</h2>
+              <h2 className=" pb-4">BGOL available in presale: {this.state.balance}</h2>
             </div>
 
           </div>
@@ -156,26 +124,24 @@ export default class Market extends Component {
               <h2 className=" pb-4">Swap</h2>
             </div>
 
-            <div className="col-lg-6 col-md-12 p-4 text-center" onClick={()=>{this.buypack(1)}} style={{cursor: "pointer"}} >
+            <div className="col-lg-6 col-md-12 p-4 text-center"  style={{cursor: "pointer"}} >
               <img className="img-fluid" src="assets/img/pack1.png" alt="" ></img>
               <input type="number" ></input>
-              <h2 className=" pb-4"><button className="btn btn-warning btn-lg"><b>Buy for 715 BUSD</b></button></h2>
+              <h2 className=" pb-4"><button className="btn btn-warning btn-lg" onClick={()=>{this.buypack(1)}}><b>Buy for 715 BUSD</b></button></h2>
             </div>
 
-            <div className="col-lg-6 col-md-12 text-center" onClick={()=>{this.buypack(2)}} style={{cursor: "pointer"}} >
+            <div className="col-lg-6 col-md-12 text-center"  style={{cursor: "pointer"}} >
               <img className="img-fluid" src="assets/img/pack2.png" alt="" ></img>
               <input type="number" ></input>
-              <h2 className=" pb-4"><button className="btn btn-warning btn-lg"><b>Sell for 430 BUSD</b></button></h2>
+              <h2 className=" pb-4"><button className="btn btn-warning btn-lg" onClick={()=>{this.buypack(2)}}><b>Sell for 430 BUSD</b></button></h2>
               
             </div>
 
           </div>
           <div className="row">
             <div className="col-12 p-4 text-center">
-              <h2 className=" pb-4">My BGOL:</h2>
+              <h2 className=" pb-4">My BGOL: {this.state.balanceTOKEN}</h2>
             </div>
-
-            {this.state.inventario}
 
             
           </div>

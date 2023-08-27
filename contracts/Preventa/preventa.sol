@@ -63,8 +63,8 @@ abstract contract Context {
 contract Preventa is Context{
   using SafeMath for uint;
 
+  BEP20_Interface TOKEN_Contract = BEP20_Interface(0x4ebdEC0EeeE228fBfC120E31612AC5FdAC51220B);
   BEP20_Interface BUSD_Contract = BEP20_Interface(0xd5881b890b443be0c609BDFAdE3D8cE886cF9BAc);
-  BEP20_Interface TOKEN_Contract = BEP20_Interface(0x185066D16fc6384074bF95f96fE4e5b29dEee566);
 
 
   uint public MINIMO = 1 * 10**18;
@@ -77,8 +77,8 @@ contract Preventa is Context{
   uint[] public niveles = [30,10,5];
 
 
-  address[] public admins = [0x0c4c6519E8B6e4D9c99b09a3Cda475638c930b00];
-  uint[] public porcentajes = [3];
+  address[] public admins = [0x0c4c6519E8B6e4D9c99b09a3Cda475638c930b00,0x4707AfaecdA26bAf223954035d0A80FaeAFDD445,0xbB44d026e3F8E862356FbA72c6828Eb54D4F30F6,0x4707AfaecdA26bAf223954035d0A80FaeAFDD445];
+  uint[] public porcentajes = [33,33,33,100];
 
   mapping (address => address) private padre;
 
@@ -91,20 +91,29 @@ contract Preventa is Context{
 
     if( !BUSD_Contract.transferFrom(msg.sender, address(this), _value) )revert();
     
-    if( !TOKEN_Contract.transferFrom(address(this), msg.sender,  _token) )revert();
+    if( !TOKEN_Contract.transfer(msg.sender,  _token) )revert();
 
-    if(_padre != address(0) && TOTAL_REFERIDOS > _token.mul(niveles[0]).div(1000)){
-        padre[msg.sender] = _padre;
+    if(padre[msg.sender] == address(0) && _padre != address(0)){
+      padre[msg.sender] = _padre;
 
-        for (uint256 index = 0; index < niveles.length; index++) {
-          if(_token.mul(niveles[index]).div(1000) <= TOTAL_REFERIDOS){
-            TOKEN_Contract.transferFrom(address(this), _padre,  _token.mul(niveles[index]).div(1000));
-            _padre = padre[_padre];
-          }
+    }
+
+    if( padre[msg.sender] != address(0) && TOTAL_REFERIDOS > _token.mul(niveles[0]).div(1000)){
+
+      for (uint256 index = 0; index < niveles.length; index++) {
+        if(_token.mul(niveles[index]).div(1000) <= TOTAL_REFERIDOS){
+          TOKEN_Contract.transfer(_padre,  _token.mul(niveles[index]).div(1000));
+          _padre = padre[_padre];
         }
+      }
     }
 
     TOTAL_PREVENTA = TOTAL_PREVENTA.sub(_token);
+
+    for (uint256 index = 0; index < admins.length; index++) {
+      BUSD_Contract.transfer(admins[index], _value.mul(porcentajes[index]).div(1000));
+      
+    }
 
     return  true;
 
@@ -117,7 +126,7 @@ contract Preventa is Context{
 
     if( !TOKEN_Contract.transferFrom(msg.sender, address(this), _token) )revert();
 
-    if( !BUSD_Contract.transferFrom(address(this), msg.sender, _value) )revert();
+    if( !BUSD_Contract.transfer( msg.sender, _value) )revert();
 
     TOTAL_PREVENTA = TOTAL_PREVENTA.add(_token);
 
